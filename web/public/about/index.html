@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1d2427">
+  <meta name="description" content="Dawn router 关于页面">
+  <title>Dawn router · 关于</title>
+  <style>
+    :root {
+      --ink: #f5f1e9;
+      --muted: rgba(245, 241, 233, 0.68);
+      --line: rgba(245, 241, 233, 0.2);
+      --accent: #e6a25c;
+      --surface: #1d2427;
+      --title-dawn: rgba(245, 241, 233, 0.78);
+      --title-router: rgba(245, 241, 233, 0.52);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 320px;
+      background: var(--surface);
+    }
+
+    body {
+      min-height: 100svh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgba(25, 32, 34, 0.96), rgba(25, 32, 34, 0.7)),
+        var(--surface);
+      font-family: "Avenir Next", "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      min-height: 100svh;
+      padding: clamp(16px, 3vw, 42px);
+      display: grid;
+      place-items: center;
+    }
+
+    .about {
+      position: relative;
+      isolation: isolate;
+      width: min(100%, 1440px);
+      min-height: min(810px, calc(100svh - clamp(32px, 6vw, 84px)));
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      background:
+        linear-gradient(90deg, rgba(15, 21, 24, 0.46) 0%, rgba(15, 21, 24, 0.24) 43%, rgba(15, 21, 24, 0.02) 78%),
+        linear-gradient(0deg, rgba(14, 19, 21, 0.42) 0%, transparent 38%),
+        url("./bg-about.webp") center / cover no-repeat;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+    }
+
+    .about::after {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      content: "";
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      pointer-events: none;
+    }
+
+    .masthead {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: clamp(22px, 4vw, 60px);
+    }
+
+    .eyebrow,
+    .page-index,
+    .meta-label {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    .page-index {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .page-index::before {
+      width: 28px;
+      height: 1px;
+      content: "";
+      background: var(--accent);
+    }
+
+    .intro {
+      align-self: end;
+      max-width: 610px;
+      padding: 0 clamp(22px, 8vw, 120px) clamp(64px, 10vw, 148px) clamp(22px, 8vw, 120px);
+    }
+
+    h1 {
+      width: fit-content;
+      max-width: 620px;
+      margin: 10px 0 24px;
+      font-weight: 400;
+      line-height: 0.9;
+      text-shadow: 0 2px 24px rgba(17, 23, 25, 0.2);
+    }
+
+    .brand-dawn,
+    .brand-router {
+      display: block;
+    }
+
+    .brand-dawn {
+      color: var(--title-dawn);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3.8rem, 9vw, 8rem);
+      letter-spacing: -0.055em;
+      line-height: 0.88;
+    }
+
+    .brand-router {
+      margin-top: 0.12em;
+      color: var(--title-router);
+      font-family: "Avenir Next", "Segoe UI", sans-serif;
+      font-size: clamp(1.25rem, 3vw, 5rem);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      line-height: 0.96;
+      text-align: right;
+    }
+
+    .rule {
+      width: min(100%, 390px);
+      height: 1px;
+      margin: 0 0 22px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+    }
+
+    .summary {
+      max-width: 390px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(0.95rem, 1.5vw, 1.08rem);
+      line-height: 1.8;
+    }
+
+    .footer {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 20px clamp(22px, 4vw, 60px) 22px;
+      border-top: 1px solid var(--line);
+      background: rgba(12, 17, 19, 0.42);
+      backdrop-filter: blur(8px);
+    }
+
+    .footer-copy {
+      max-width: 700px;
+      margin: 0;
+      color: rgba(245, 241, 233, 0.52);
+      font-size: 0.72rem;
+      line-height: 1.7;
+    }
+
+    .footer-copy a {
+      color: rgba(245, 241, 233, 0.72);
+      text-underline-offset: 3px;
+      transition: color 180ms ease;
+    }
+
+    .footer-copy a:hover,
+    .footer-copy a:focus-visible {
+      color: var(--accent);
+    }
+
+    .license {
+      flex: 0 0 auto;
+      color: rgba(245, 241, 233, 0.56);
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 180ms ease;
+    }
+
+    .license:hover,
+    .license:focus-visible {
+      color: var(--accent);
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        min-height: 100svh;
+        padding: 0;
+      }
+
+      .about {
+        min-height: 100svh;
+        grid-template-rows: 1fr auto;
+        background-position: 58% center;
+      }
+
+      .masthead {
+        padding: 24px 22px;
+      }
+
+      .intro {
+        padding: 0 22px 68px;
+      }
+
+      h1 {
+        max-width: 350px;
+      }
+
+      .brand-dawn {
+        font-size: clamp(3.6rem, 18vw, 6rem);
+      }
+
+      .brand-router {
+        font-size: clamp(2rem, 10vw, 3.5rem);
+      }
+
+      .summary {
+        max-width: 300px;
+        font-size: 0.9rem;
+        line-height: 1.7;
+      }
+
+      .footer {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+        padding: 16px 22px 18px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="about" aria-labelledby="site-title">
+      <header class="masthead">
+        <p class="eyebrow">About / Gateway for ideas</p>
+        <p class="page-index">2026</p>
+      </header>
+
+      <div class="intro">
+        <p class="meta-label">Your access point</p>
+        <h1 id="site-title"><span class="brand-dawn">Dawn</span><span class="brand-router">router</span></h1>
+        <div class="rule" aria-hidden="true"></div>
+        <p class="summary">面向未来的 AI API 路由入口。</p>
+      </div>
+
+      <footer class="footer">
+        <p class="footer-copy">
+          Dawn router © 2026 · Powered by
+          <a href="https://github.com/QuantumNous/new-api" target="_blank" rel="noreferrer">New API</a>
+          © 2026 <a href="https://github.com/QuantumNous" target="_blank" rel="noreferrer">QuantumNous</a>
+          · Based on <a href="https://github.com/songquanpeng/one-api" target="_blank" rel="noreferrer">One API</a>
+          © 2023 <a href="https://github.com/songquanpeng" target="_blank" rel="noreferrer">JustSong</a>
+        </p>
+        <a class="license" href="https://github.com/QuantumNous/new-api/blob/main/LICENSE" target="_blank" rel="noreferrer">AGPL v3.0</a>
+      </footer>
+    </section>
+  </main>
+</body>
+</html>

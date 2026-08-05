@@ -1,0 +1,75 @@
+name: Deploy production
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Immutable GHCR image tag, for example sha-<commit>'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy through SSH
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      IMAGE_TAG: ${{ inputs.image_tag }}
+      SSH_HOST: ${{ vars.PRODUCTION_SSH_HOST }}
+      SSH_USER: ${{ vars.PRODUCTION_SSH_USER }}
+      DEPLOY_PATH: ${{ vars.PRODUCTION_DEPLOY_PATH }}
+      KNOWN_HOSTS: ${{ secrets.PRODUCTION_KNOWN_HOSTS }}
+      IMAGE_NAME: ghcr.io/ymngkhtd/dawn-router
+    steps:
+      - name: Check out
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: Dawn-router-main
+
+      - name: Validate deployment input
+        shell: bash
+        run: |
+          case "$IMAGE_TAG" in
+            sha-*|v*) ;;
+            *) echo "image_tag must start with sha- or v" >&2; exit 1 ;;
+          esac
+          test -n "$SSH_HOST"
+          test -n "$SSH_USER"
+          test -n "$DEPLOY_PATH"
+          test -n "$KNOWN_HOSTS"
+
+      - name: Configure SSH
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.PRODUCTION_SSH_PRIVATE_KEY }}
+        run: |
+          test -n "$SSH_PRIVATE_KEY"
+          install -m 700 -d "$HOME/.ssh"
+          install -m 600 /dev/null "$RUNNER_TEMP/production_deploy_key"
+          printf '%s\n' "$SSH_PRIVATE_KEY" > "$RUNNER_TEMP/production_deploy_key"
+          printf '%s\n' "$KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+
+      - name: Upload deployment files
+        shell: bash
+        run: |
+          ssh -i "$RUNNER_TEMP/production_deploy_key" "$SSH_USER@$SSH_HOST" \
+            "mkdir -p '$DEPLOY_PATH/deploy'"
+          scp -i "$RUNNER_TEMP/production_deploy_key" \
+            docker-compose.prod.yml \
+            "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/docker-compose.prod.yml"
+          scp -i "$RUNNER_TEMP/production_deploy_key" \
+            deploy/production-deploy.sh \
+            "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/deploy/production-deploy.sh"
+
+      - name: Deploy image
+        shell: bash
+        run: |
+          ssh -i "$RUNNER_TEMP/production_deploy_key" "$SSH_USER@$SSH_HOST" \
+            "cd '$DEPLOY_PATH' && chmod 700 deploy/production-deploy.sh && IMAGE_TAG='$IMAGE_TAG' IMAGE_REPOSITORY='$IMAGE_NAME' ./deploy/production-deploy.sh"

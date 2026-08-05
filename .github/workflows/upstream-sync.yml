@@ -1,0 +1,64 @@
+name: Sync upstream
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 2 * * *'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: upstream-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Merge upstream into a review branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out development branch
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: Dawn-router-main
+          fetch-depth: 0
+
+      - name: Create upstream sync pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          parent_url="$(gh api "repos/${GITHUB_REPOSITORY}" --jq '.parent.clone_url')"
+          upstream_branch="$(gh api "repos/${GITHUB_REPOSITORY}" --jq '.parent.default_branch')"
+          if [ -z "$parent_url" ] || [ -z "$upstream_branch" ]; then
+            echo "This repository does not expose a fork parent through the GitHub API." >&2
+            exit 1
+          fi
+
+          git remote add upstream "$parent_url"
+          git fetch upstream "$upstream_branch" --prune
+
+          if git merge-base --is-ancestor "upstream/$upstream_branch" HEAD; then
+            echo "Dawn-router-main already contains upstream/$upstream_branch"
+            exit 0
+          fi
+
+          sync_branch="automation/upstream-sync-${GITHUB_RUN_ID}"
+          git switch -c "$sync_branch"
+          if ! git merge --no-edit "upstream/$upstream_branch"; then
+            echo "Upstream changes conflict with Dawn-router-main. Resolve this sync manually." >&2
+            git merge --abort
+            exit 1
+          fi
+
+          git push --set-upstream origin "$sync_branch"
+          gh pr create \
+            --base Dawn-router-main \
+            --head "$sync_branch" \
+            --title "Sync upstream $upstream_branch" \
+            --body "Automated upstream sync from $parent_url/$upstream_branch. Review conflicts, migrations, workflow changes, and provider behavior before merging."
