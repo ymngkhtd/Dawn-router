@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/gin-contrib/static"
 )
@@ -29,6 +30,7 @@ func (e *embedFileSystem) Open(name string) (http.File, error) {
 		// which will use the replaced index bytes with analytic codes.
 		return nil, os.ErrNotExist
 	}
+	name = strings.TrimPrefix(name, "/")
 	return e.FileSystem.Open(name)
 }
 
