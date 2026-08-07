@@ -31,6 +31,9 @@ func (e *embedFileSystem) Open(name string) (http.File, error) {
 		return nil, os.ErrNotExist
 	}
 	name = strings.TrimPrefix(name, "/")
+	if name == "/" {
+		return nil, os.ErrNotExist
+	}
 	return e.FileSystem.Open(name)
 }
 
