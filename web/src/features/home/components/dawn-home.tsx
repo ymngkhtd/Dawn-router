@@ -55,10 +55,6 @@ export function DawnHome(props: DawnHomeProps) {
       <div className='mx-auto flex min-h-[calc(100svh-4rem)] w-full max-w-[1440px] flex-col justify-between border-x border-white/10 px-6 pt-24 pb-6 sm:px-10 lg:px-16'>
         <div className='flex items-start justify-between gap-6 text-[10px] font-semibold tracking-[0.22em] text-white/60 uppercase'>
           <span className='landing-animate-fade-up'>AI API gateway</span>
-          <span className='landing-animate-fade-up flex items-center gap-3 [animation-delay:80ms]'>
-            <span className='h-px w-7 bg-[#e6a25c]' />
-            01
-          </span>
         </div>
 
         <div className='grid items-end gap-14 py-16 lg:grid-cols-[minmax(0,1fr)_minmax(360px,470px)] lg:gap-24 lg:py-10'>
@@ -68,7 +64,7 @@ export function DawnHome(props: DawnHomeProps) {
               className='w-fit max-w-full font-normal leading-none'
             >
               <span
-                className='block leading-[0.9] text-[clamp(4.4rem,13vw,10rem)] tracking-[-0.07em] text-white/85'
+                className='block leading-[0.9] text-[clamp(4.4rem,13vw,10rem)] tracking-[-0.02em] text-white/85'
                 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
               >
                 Dawn
@@ -79,7 +75,7 @@ export function DawnHome(props: DawnHomeProps) {
             </h1>
             <div className='mt-8 h-px w-56 bg-gradient-to-r from-[#e6a25c] to-transparent' />
             <p className='mt-5 max-w-sm text-base leading-relaxed text-white/65'>
-              {t('One endpoint. Trusted channels.')}
+              {t('Until dawn...')}
             </p>
           </div>
 
