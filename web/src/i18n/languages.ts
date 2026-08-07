@@ -41,7 +41,12 @@ export function normalizeInterfaceLanguage(value?: string | null): string {
   ) {
     normalized = 'zhTW'
   }
-  if (value === 'zh-CN' || value === 'zh-Hans' || value === 'zhCN') {
+  if (
+    value === 'zh' ||
+    value === 'zh-CN' ||
+    value === 'zh-Hans' ||
+    value === 'zhCN'
+  ) {
     normalized = 'zhCN'
   }
 

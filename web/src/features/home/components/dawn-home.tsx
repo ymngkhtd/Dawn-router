@@ -63,14 +63,17 @@ export function DawnHome(props: DawnHomeProps) {
 
         <div className='grid items-end gap-14 py-16 lg:grid-cols-[minmax(0,1fr)_minmax(360px,470px)] lg:gap-24 lg:py-10'>
           <div className='landing-animate-fade-up [animation-delay:140ms]'>
-            <h1 id='dawn-home-title' className='max-w-3xl font-normal leading-[0.86]'>
+            <h1
+              id='dawn-home-title'
+              className='w-fit max-w-full font-normal leading-none'
+            >
               <span
-                className='block text-[clamp(4.4rem,13vw,10rem)] tracking-[-0.07em] text-white/85'
+                className='block leading-[0.9] text-[clamp(4.4rem,13vw,10rem)] tracking-[-0.07em] text-white/85'
                 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
               >
                 Dawn
               </span>
-              <span className='mt-3 block text-[clamp(2.5rem,6vw,5.2rem)] font-medium tracking-[0.01em] text-white/50'>
+              <span className='mt-2 block text-right text-[clamp(2.5rem,6vw,5.2rem)] leading-none font-medium tracking-[0.01em] text-white/50'>
                 router
               </span>
             </h1>
@@ -122,7 +125,9 @@ export function DawnHome(props: DawnHomeProps) {
           </div>
         </div>
 
-        <div aria-hidden='true' className='border-t border-white/15 pt-4' />
+        <footer className='border-t border-white/15 pt-4 text-xs text-white/45'>
+          {t('Dawn router © 2026')}
+        </footer>
       </div>
     </section>
   )
