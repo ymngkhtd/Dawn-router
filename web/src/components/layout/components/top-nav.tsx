@@ -64,7 +64,14 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent side='bottom' align='start'>
             {normalizedLinks.map(
-              ({ title, href, isActive, disabled, external }) => (
+              ({
+                title,
+                href,
+                isActive,
+                disabled,
+                external,
+                reloadDocument,
+              }) => (
                 <DropdownMenuItem
                   key={`${title}-${href}`}
                   render={
@@ -80,6 +87,7 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
                     ) : (
                       <Link
                         to={href}
+                        reloadDocument={reloadDocument}
                         className={!isActive ? 'text-muted-foreground' : ''}
                         disabled={disabled}
                       >
@@ -102,7 +110,15 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
         )}
         {...props}
       >
-        {normalizedLinks.map(({ title, href, isActive, disabled, external }) =>
+        {normalizedLinks.map(
+          ({
+            title,
+            href,
+            isActive,
+            disabled,
+            external,
+            reloadDocument,
+          }) =>
           external ? (
             <a
               key={`${title}-${href}`}
@@ -117,6 +133,7 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
             <Link
               key={`${title}-${href}`}
               to={href}
+              reloadDocument={reloadDocument}
               disabled={disabled}
               className={`hover:text-primary text-sm font-medium transition-colors ${isActive ? '' : 'text-muted-foreground'}`}
             >

@@ -241,6 +241,7 @@ export function PublicHeader(props: PublicHeaderProps) {
                   <Link
                     key={i}
                     to={link.href}
+                    reloadDocument={link.reloadDocument}
                     disabled={link.disabled}
                     onClick={(event) => handleNavLinkClick(event, link)}
                     className={cn(
@@ -382,6 +383,7 @@ export function PublicHeader(props: PublicHeaderProps) {
                 <Link
                   key={i}
                   to={link.href}
+                  reloadDocument={link.reloadDocument}
                   disabled={link.disabled}
                   onClick={(event) => handleNavLinkClick(event, link, true)}
                   className={linkClassName}

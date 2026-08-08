@@ -3,6 +3,7 @@ package common
 import (
 	"io"
 	"net/http"
+	"net/http/httptest"
 	"os"
 	"testing"
 	"testing/fstest"
@@ -36,4 +37,20 @@ func TestEmbedFileSystemOpenRejectsRepeatedRootPath(t *testing.T) {
 	file, err := fileSystem.Open("//")
 	require.ErrorIs(t, err, os.ErrNotExist)
 	require.Nil(t, file)
+}
+
+func TestEmbedFileSystemServesDirectoryIndexWithoutRedirect(t *testing.T) {
+	fileSystem := &embedFileSystem{
+		FileSystem: http.FS(fstest.MapFS{
+			"about/index.html": &fstest.MapFile{Data: []byte("about")},
+		}),
+	}
+
+	request := httptest.NewRequest(http.MethodGet, "https://example.test/about/", nil)
+	response := httptest.NewRecorder()
+	http.FileServer(fileSystem).ServeHTTP(response, request)
+
+	require.Equal(t, http.StatusOK, response.Code)
+	require.Empty(t, response.Header().Get("Location"))
+	require.Equal(t, "about", response.Body.String())
 }
