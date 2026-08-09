@@ -19,12 +19,42 @@ type WebAssets struct {
 	IndexPage []byte
 }
 
+func serveAboutPage(fileSystem http.FileSystem) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if c.Request.Method != http.MethodGet && c.Request.Method != http.MethodHead {
+			c.Next()
+			return
+		}
+		if c.Request.URL.Path != "/about" && c.Request.URL.Path != "/about/" {
+			c.Next()
+			return
+		}
+
+		file, err := fileSystem.Open("/about/index.html")
+		if err != nil {
+			c.Next()
+			return
+		}
+		info, err := file.Stat()
+		if err != nil {
+			_ = file.Close()
+			c.Next()
+			return
+		}
+
+		http.ServeContent(c.Writer, c.Request, info.Name(), info.ModTime(), file)
+		_ = file.Close()
+		c.Abort()
+	}
+}
+
 func SetWebRouter(router *gin.Engine, assets WebAssets) {
 	frontendFS := common.EmbedFolder(assets.BuildFS, "web/dist")
 
 	router.Use(gzip.Gzip(gzip.DefaultCompression))
 	router.Use(middleware.GlobalWebRateLimit())
 	router.Use(middleware.Cache())
+	router.Use(serveAboutPage(frontendFS))
 	router.Use(static.Serve("", frontendFS))
 	router.NoRoute(func(c *gin.Context) {
 		c.Set(middleware.RouteTagKey, "web")
