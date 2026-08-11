@@ -30,6 +30,7 @@ func TestServeAboutPageHandlesBothTrailingSlashForms(t *testing.T) {
 
 		require.Equal(t, http.StatusOK, response.Code, path)
 		require.Empty(t, response.Header().Get("Location"), path)
+		require.Equal(t, "no-cache", response.Header().Get("Cache-Control"), path)
 		require.Equal(t, "about", response.Body.String(), path)
 	}
 }
