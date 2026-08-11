@@ -42,6 +42,7 @@ func serveAboutPage(fileSystem http.FileSystem) gin.HandlerFunc {
 			return
 		}
 
+		c.Header("Cache-Control", "no-cache")
 		http.ServeContent(c.Writer, c.Request, info.Name(), info.ModTime(), file)
 		_ = file.Close()
 		c.Abort()
