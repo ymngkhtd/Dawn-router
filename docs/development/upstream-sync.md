@@ -64,7 +64,9 @@ Let CI run before merging. Review at least:
 - Frontend route and locale changes
 - Changes to protected project attribution or metadata
 
-After verification, merge the Pull Request into `Dawn-router-main`. Delete the temporary sync branch after merge.
+After verification, merge the Pull Request into `Dawn-router-main` using **Create a merge commit**, not squash or rebase merge. Preserving upstream ancestry lets later synchronizations identify changes already integrated. Delete the temporary sync branch after merge.
+
+Keep `origin/main` as an optional clean upstream mirror. Fast-forward it from `upstream/main`; do not put product customizations there or use GitHub's discard-commits option on `Dawn-router-main`.
 
 ## Automated sync
 
